@@ -85,7 +85,7 @@ blueprint:
 
     in_min_time_on:
       name: "Durée minimum d'activation"
-      descrition: "Durée d'activation minimale avant de pouvoir déclencher une désactivation"
+      description: "Durée d'activation minimale avant de pouvoir déclencher une désactivation"
       default: 60
       selector:
         number:
@@ -97,7 +97,7 @@ blueprint:
 
     in_min_time_off:
       name: "Durée minimum de désactivation"
-      descrition: "Durée de désactivation minimale avant de pouvoir déclencher une activation"
+      description: "Durée de désactivation minimale avant de pouvoir déclencher une activation"
       default: 30
       selector:
         number:
@@ -109,7 +109,7 @@ blueprint:
 
     in_maj_time_conso:
       name: "Délais de mise à jour consommation"
-      descrition: "Durée d'activation avant mise à jour automatique de la consommation nominale"
+      description: "Durée d'activation avant mise à jour automatique de la consommation nominale"
       default: 30
       selector:
         number:
@@ -118,7 +118,7 @@ blueprint:
           step: 10
           unit_of_measurement: "s"
           mode: slider
-          
+
     in_device:
       name: "Entité de contrôle de l'appareil"
       description: "Pour pouvoir allumer et éteindre l'appareil selon le mode de fonctionnement choisi'"
