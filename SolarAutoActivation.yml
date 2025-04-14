@@ -93,6 +93,7 @@ blueprint:
           max: 300
           step: 10
           unit_of_measurement: "s"
+          mode: slider
 
     in_min_time_off:
       name: "Durée minimum de désactivation"
@@ -104,6 +105,7 @@ blueprint:
           max: 300
           step: 10
           unit_of_measurement: "s"
+          mode: slider
 
     in_maj_time_conso:
       name: "Délais de mise à jour consommation"
@@ -115,7 +117,8 @@ blueprint:
           max: 300
           step: 10
           unit_of_measurement: "s"
-
+          mode: slider
+          
     in_device:
       name: "Entité de contrôle de l'appareil"
       description: "Pour pouvoir allumer et éteindre l'appareil selon le mode de fonctionnement choisi'"
