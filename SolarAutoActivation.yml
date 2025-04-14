@@ -128,6 +128,15 @@ blueprint:
             domain: 
               - switch
               - light
+          multiple: false
+
+    in_device_conso:
+      name: "Entité de mesure de la consommation de l'appareil"
+      description: "Doit retourner la puissance électrique consommée par l'appareil (W)"
+      selector:
+        entity:
+          filter:
+            domain: sensor
             device_class: power
           multiple: false
 
