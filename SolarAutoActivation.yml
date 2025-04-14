@@ -128,7 +128,7 @@ blueprint:
             domain: 
               - switch
               - light
-            device_class: energy
+            device_class: power
           multiple: false
 
     in_surplus:
@@ -138,7 +138,7 @@ blueprint:
         entity:
           filter:
             domain: sensor
-            device_class: energy
+            device_class: power
           multiple: false
 
     in_conso:
@@ -148,5 +148,5 @@ blueprint:
         entity:
           filter:
             domain: sensor
-            device_class: energy
+            device_class: power
           multiple: false
