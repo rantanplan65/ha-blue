@@ -1,0 +1,149 @@
+blueprint:
+  name: "Gestion activation adaptative appareil consomateur solaire"
+  description: "Gestion automatique de l'activation/désactivation d'un appareil en fonction de la production solaire"
+  domain: automation
+  homeassistant:
+    min_version: 2025.1.0
+
+  input:
+    in_mode:
+      name: "Mode de fonctionnement"
+      description: >
+        Eteint: Désactivation forcée de l'appareil
+
+        
+        Manuel: Activation forcée de l'appareil
+
+
+        ---- Activation gérée automatiquement en fonction du surplus de production ----
+
+
+        Agressif: Activation dès les premiers watts de surproduction
+
+
+        Econome: Activation seulement si consomation de l'appareil est inférieure au surplus
+
+
+        Equilibré: Activation/désactivation quand le surplus fluctue autour de la moitié de la consommation de l'appareil
+
+      default: "Econome"
+      selector:
+        select:
+          options:
+            - "Eteint"
+            - "Manuel"
+            - "Agressif"
+            - "Econome"
+            - "Equilibré"
+
+    in_consommation:
+      name: "Consommation nominale"
+      description: "Consommation nominale de l'appareil en fonctionnement (W)"
+      default: 1000
+      selector:
+        number:
+          min: 0
+          max: 3000
+          step: 1
+          unit_of_measurement: "W"
+
+    in_agressif:
+      name: "Seuil aggressif"
+      description: "Fraction de consommation nominale à partir de laquelle un surplus de production déclenche une activation. La désactivation intervient dès que l'énergie totale consommée est supérieure à la consommation de l'appareil"
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 25
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+
+    in_econome:
+      name: "Seuil économe"
+      description: "Pourcentage de la consommation nominale à partir de laquelle un surplus de production déclenche une activation. La désactivation intervient lorsque le surplus tombe à zéro"
+      default: 105
+      selector:
+        number:
+          min: 101
+          max: 125
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+
+    in_equilibre:
+      name: "Seuil équilibré"
+      description: "Fraction de consommation nominale à partir de laquelle un surplus de production déclenche une activation. Seuil mirroir à 50% pour la désactivation. Exemple (51/49) (60/40) (65/35)"
+      default: 60
+      selector:
+        number:
+          min: 51
+          max: 75
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+
+    in_min_time_on:
+      name: "Durée minimum d'activation"
+      descrition: "Durée d'activation minimale avant de pouvoir déclencher une désactivation"
+      default: 60
+      selector:
+        number:
+          min: 10
+          max: 300
+          step: 10
+          unit_of_measurement: "s"
+
+    in_min_time_off:
+      name: "Durée minimum de désactivation"
+      descrition: "Durée de désactivation minimale avant de pouvoir déclencher une activation"
+      default: 30
+      selector:
+        number:
+          min: 10
+          max: 300
+          step: 10
+          unit_of_measurement: "s"
+
+    in_maj_time_conso:
+      name: "Délais de mise à jour consommation"
+      descrition: "Durée d'activation avant mise à jour automatique de la consommation nominale"
+      default: 30
+      selector:
+        number:
+          min: 10
+          max: 300
+          step: 10
+          unit_of_measurement: "s"
+
+    in_device:
+      name: "Entité de contrôle de l'appareil"
+      description: "Pour pouvoir allumer et éteindre l'appareil selon le mode de fonctionnement choisi'"
+      selector:
+        entity:
+          filter:
+            domain: 
+              - switch
+              - light
+            device_class: energy
+          multiple: false
+
+    in_surplus:
+      name: "Entité de mesure du surplus"
+      description: "Doit retourner la puissance électrique exportée vers le réseau (W)"
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            device_class: energy
+          multiple: false
+
+    in_conso:
+      name: "Entité de mesure de la consommation"
+      description: "Doit retourner la puissance électrique importée du réseau (W)"
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            device_class: energy
+          multiple: false
