@@ -159,3 +159,31 @@ blueprint:
             domain: sensor
             device_class: power
           multiple: false
+
+
+variables:
+  var_mode: !input in_mode
+  var_consommation: !input in_consommation
+  var_agressif: !input in_agressif
+  var_econome: !input in_econome
+  var_equilibre: !input in_equilibre
+  var_min_time_on: !input in_min_time_on
+  var_min_time_off: !input in_min_time_off
+  var_maj_time_conso: !input in_maj_time_conso
+
+  var_p_agressif_on: >-
+    {# Valeur de puissance de seuil d'activation en fonction de la puissance de l'appareil et du réglage agressif #}
+    {{ var_consommation * var_agressif / 100 }}
+
+  var_p_econome_on: >-
+    {# Valeur de puissance de seuil d'activation en fonction de la puissance de l'appareil et du réglage économe #}
+    {{ var_consommation * var_econome / 100 }}
+
+  var_p_equilibre_on: >-
+    {# Valeur de puissance de seuil d'activation en fonction de la puissance de l'appareil et du réglage équilibre #}
+    {{ var_consommation * var_equilibre / 100}}
+
+  var_p_equilibre_off: >-
+    {# Valeur de puissance de seuil de désactivation en fonction de la puissance de l'appareil et du réglage équilibre #}
+    {{ var_consommation * (100 - var_equilibre) / 100}}
+
