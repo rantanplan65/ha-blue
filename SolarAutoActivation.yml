@@ -187,3 +187,15 @@ variables:
     {# Valeur de puissance de seuil de désactivation en fonction de la puissance de l'appareil et du réglage équilibre #}
     {{ var_consommation * (100 - var_equilibre) / 100}}
 
+trigger:
+  - platform: state
+    entity_id: !input in_mode
+    from: null
+    to: null
+    id: "1"
+  - platform: time_pattern
+    hours: "*"
+    minutes: "*"
+    seconds: /5
+    id: "2"
+    
