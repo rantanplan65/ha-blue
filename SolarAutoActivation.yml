@@ -187,6 +187,8 @@ variables:
     {# Valeur de puissance de seuil de désactivation en fonction de la puissance de l'appareil et du réglage équilibre #}
     {{ var_consommation * (100 - var_equilibre) / 100}}
 
+  var_pret: true
+
 trigger:
   - platform: state
     entity_id: !input in_mode
@@ -198,4 +200,93 @@ trigger:
     minutes: "*"
     seconds: /5
     id: "2"
-    
+
+action:
+  - if: # Toutes les x secondes
+      - condition: trigger
+        id: "2"
+      - "{{ var_pret == true }}" # si la durée minimum est effectuée
+    then:
+      - if: # En fonction de l'état de l'appareil
+          - condition: state
+            entity_id: !input in_device 
+            state: "off"
+        then: # Si l'appareil est désactivé
+          - choose:
+              - conditions: # Mode Manuel
+                  - "{{ var_mode == 'Manuel' }}"
+                sequence:
+                # bloc d'actions
+                  - service: homeassistant.turn_on # Activation appareil
+                    target:
+                      entity_id: !input in_device
+                  - variables: # Blocage
+                      var_pret: false
+                  - delay: "{{ var_min_time_on }}" # Temporisation 1
+                  - variables: # Déblocage
+                      var_pret: true
+                  - delay: "{{ var_maj_time_conso }}" # Temporisation 2
+                  - service: input_number.set_value
+                    target:
+                      entity_id: !input in_consommation 
+                    data:
+                      value: "{{ !input in_device_conso.power }}" #<------- A vérifier
+              - conditions: # Mode Agressif
+                  - "{{ var_mode == 'Agressif' }}"
+                  - condition: numeric_state
+                    entity_id: !input in_surplus
+                    above: "{{ var_p_agressif_on }}"
+                sequence:
+                # bloc d'actions
+                  - service: homeassistant.turn_on # Activation appareil
+                    target:
+                      entity_id: !input in_device
+                  - variables: # Blocage
+                      var_pret: false
+                  - delay: "{{ var_min_time_on }}"
+                  - variables: # Déblocage
+                      var_pret: true
+
+              - conditions: # Mode Econome
+                  - "{{ var_mode == 'Econome' }}"
+                  - condition: numeric_state
+                    entity_id: !input in_surplus
+                    above: "{{ var_p_econome_on }}"
+                sequence:
+                # bloc d'actions
+
+              - conditions: # Mode Equilibré
+                  - "{{ var_mode == 'Equilibré' }}"
+                sequence:
+                # bloc d'actions
+
+                
+
+        else: # Si l'appareil est activé
+          - choose:
+              - conditions: # Mode Eteint
+                  - "{{ var_mode == 'Eteint' }}"
+                sequence:
+                # bloc d'actions
+                  - service: homeassistant.turn_off
+                    target:
+                      entity_id: !input in_device
+
+              - conditions: # Mode Agressif
+                  - "{{ var_mode == 'Agressif' }}"
+                sequence:
+                # bloc d'actions
+
+              - conditions: # Mode Econome
+                  - "{{ var_mode == 'Econome' }}"
+                sequence:
+                # bloc d'actions
+
+              - conditions: # Mode Equilibré
+                  - "{{ var_mode == 'Equilibré' }}"
+                sequence:
+                # bloc d'actions
+
+                
+
+
